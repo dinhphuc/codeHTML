@@ -1,0 +1,94 @@
+﻿#include <stdio.h>
+#include <conio.h>
+#include <iostream.h>
+#include <values.h>
+#define max 100
+
+void Doc_File(int A[max][max], int &n, int &D, int &C) {
+   FILE*f = fopen("InputDijkstra.txt","rb");
+   fscanf(f,"%d%d%d",&n,&D,&C);
+   cout<<"Ma Tran Lien Ket Tuong Ung.\n";
+   cout<<D<<" "<<C<<endl;
+   for(int i =0;i<n;i++) {
+          for(int j =0;j<n;j++) {
+              fscanf(f,"%d",&A[i][j]);
+              cout<<A[i][j]<<" ";
+   }
+   cout<<endl;
+  }
+fclose(f);
+D--; C--;
+}
+
+// thuat toan Dijkstra
+
+void Dijkstra(int A[max][max], int n, int D, int C) {
+  char DanhDau[max];
+  int Nhan[max], Truoc[max], XP, min;
+  for(int i=0; i<n; i++){
+        Nhan[i] = MAXINT;
+        DanhDau[i] = 0;
+        Truoc[i] = D;
+  }
+  Nhan[D] = 0;
+  DanhDau[D] = 1;
+  XP = D;
+  while(XP != C){
+       for(int j=0; j<n; j++)
+          if(A[XP][j]>0 && Nhan[j]>A[XP][j]+Nhan[XP] && DanhDau[j]==0) {
+              Nhan[j] = A[XP][j]+Nhan[XP];
+              Truoc[j] = XP;
+          }
+          min = MAXINT;
+        for(j = 0; j<n; j++)
+               if(min>Nhan[j]&& DanhDau[j]==0){
+                      min = Nhan[j];
+                      XP = j;
+              }
+        DanhDau[XP] = 1;
+   }
+    cout<<"Duong Di Ngan Nhat La:"<<Nhan[C]<<endl;
+    cout<<C+1<<" <- "<<Truoc[C]+1;
+    i = Truoc[C];
+    while(i!=D){
+          i = Truoc[i];
+          cout<<" <- "<<i+1;
+      }
+}
+
+void main() {
+    int A[max][max],n,Dau,Cuoi;
+    Doc_File(A,n,Dau,Cuoi);
+    Dijkstra(A,n,Dau,Cuoi);
+     getch();
+}
+
+/***** LƯU Ý ****/
+File Input.txt được đặt ở thư mục chứa code , các bạn có thể tạo phải Input.txt khác tùy vào đồ thị mà bạn muốn kiểm tra
+
+
+Chúc các bạn thành công!
+
+-------------------------------------------------------
+function BellmanFord(danh_sách_đỉnh, danh_sách_cung, nguồn)
+   // hàm yêu cầu đồ thị đưa vào dưới dạng một danh sách đỉnh, một danh sách cung
+   // hàm tính các giá trị khoảng_cách và đỉnh_liền_trước của các đỉnh, 
+   // sao cho các giá trị đỉnh_liền_trước sẽ lưu lại các đường đi ngắn nhất.
+
+   // bước 1: khởi tạo đồ thị
+   for each v in danh_sách_đỉnh:
+       if v is nguồn then khoảng_cách(v):= 0
+       else khoảng_cách(v):= vô cùng
+       đỉnh_liền_trước(v):= null
+   
+   // bước 2: kết nạp cạnh
+   for i from 1 to size(danh_sách_đỉnh)-1:       
+       for each (u,v) in danh_sách_cung:
+           if khoảng_cách(v) > khoảng_cách(u) + trọng_số(u,v):
+               khoảng_cách(v):= khoảng_cách(u) + trọng_số(u,v)
+               đỉnh_liền_trước(v):= u
+
+   // bước 3: kiểm tra chu trình âm
+   for each (u,v) in danh_sách_cung:
+       if khoảng_cách(v) > khoảng_cách(u) + trọng_số(u,v):
+           error "Đồ thị chứa chu trình âm"
